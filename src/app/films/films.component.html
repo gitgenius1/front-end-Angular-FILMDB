@@ -1,0 +1,278 @@
+<!--Starting Selection-->
+<div style="display: flex; justify-content: space-around; margin: auto;" *ngIf="choice">
+    <mat-card class="mat-elevation-z4" style="margin-left: 10px;">
+        <mat-card-header>
+            <mat-card-title class="textWrap">View All Films</mat-card-title>
+        </mat-card-header>
+        <mat-card-actions style="display: flex; justify-content: center;">
+            <button mat-raised-button color="primary" (click)="viewAllFilms()">
+                <mat-icon>view_array</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+    <mat-card class="mat-elevation-z4" style="margin-left: 10px;">
+        <mat-card-header>
+            <mat-card-title class="textWrap">Add a Film Record</mat-card-title>
+        </mat-card-header>
+        <mat-card-actions style="display: flex; justify-content: center;">
+            <button mat-raised-button color="accent" (click)="openInsertPopup()">
+                <mat-icon>add_to_queue</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+<div style="margin: 50px">
+</div>
+
+<!--Search-->
+<h3 style="display: flex; justify-content: space-around; margin: auto;" *ngIf="choice">Or Search for films</h3>
+<div style="display: flex; justify-content: space-around; margin: auto;" *ngIf="choice">
+    <mat-card class="mat-elevation-z4" style="margin-left: 10px;">
+        <form [formGroup]="searchByIdForm" (ngSubmit)="searchById(searchByIdForm.value)">
+            <mat-form-field>
+                <input type="number" formControlName="id" matInput placeholder="Search by Id">
+            </mat-form-field>
+            <button mat-button>
+                <mat-icon>search</mat-icon>
+            </button>
+        </form>
+    </mat-card>
+    <mat-card class="mat-elevation-z4" style="margin-left: 10px;">
+        <form [formGroup]="searchByTitleForm" (ngSubmit)="searchByTitle(searchByTitleForm.value)">
+            <mat-form-field>
+                <input type="text" formControlName="title" matInput placeholder="Search by Title">
+            </mat-form-field>
+            <button mat-button>
+                <mat-icon>search</mat-icon>
+            </button>
+        </form>
+    </mat-card>
+</div>
+
+<!--Update Popup-->
+<div class="modal" style="background:rgba(0,0,0,0.5);
+opacity: 1;" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Films</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="updateForm" (ngSubmit)="updateFilm(updateForm.value)">
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Id</mat-label>
+                            <input formControlName="id" matInput type="number">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Title</mat-label>
+                            <input formControlName="title" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Year</mat-label>
+                            <input formControlName="year" matInput type="number">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Stars</mat-label>
+                            <input formControlName="stars" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Director</mat-label>
+                            <input formControlName="director" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Review</mat-label>
+                            <input formControlName="review" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <button mat-raised-button color="primary" [disabled]="updateForm.invalid">Confirm
+                            Update</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" mat-raised-button color="warn" (click)="closeUpdatePopup()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Popup -->
+<div class="modal" style="background:rgba(0,0,0,0.5);
+opacity: 1;" tabindex="-1" role="dialog" [ngStyle]="{'display':deletePopup}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Films</h4>
+            </div>
+            <div class="modal-body">
+                Are you Sure to DELETE the film ?
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-between;">
+                <button type="button" mat-raised-button color="warn" (click)="deleteFilm()"
+                    (click)="closeDeletePopup()">
+                    Yes
+                </button>
+                <button type="button" mat-raised-button (click)="closeDeletePopup()">
+                    No
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Insert Form-->
+<div class="modal" style="background:rgba(0,0,0,0.5);
+opacity: 1;" tabindex="-1" role="dialog" [ngStyle]="{'display':insertStyle}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Insert a Film</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="insertForm" (ngSubmit)="addSubmit(insertForm.value)">
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Id</mat-label>
+                            <input formControlName="id" matInput type="number">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Title</mat-label>
+                            <input formControlName="title" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Year</mat-label>
+                            <input formControlName="year" matInput type="number">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Stars</mat-label>
+                            <input formControlName="stars" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Director</mat-label>
+                            <input formControlName="director" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Review</mat-label>
+                            <input formControlName="review" matInput type="text">
+                        </mat-form-field>
+                    </div>
+                    <div style="justify-content: center; display: flex;">
+                        <button mat-raised-button color="primary" [disabled]="insertForm.invalid">Confirm Add</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" mat-raised-button color="warn" (click)="closeInsertPopup()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--All Film Cards-->
+<div class="content" *ngIf="viewFilms">
+    <div class="row">
+        <div class="column" *ngFor="let film of films">
+            <mat-card style="height: 28rem;" class="mat-elevation-z4">
+                <mat-card-header>
+                    <mat-card-title matTooltip="{{film.title}}" class="textWrap">{{film.title}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <h4>Year: </h4>{{film.year}}
+                    <h4>Director: </h4>{{film.director}}
+                    <h4>Stars: </h4>{{film.stars}}
+                    <h4>Review: </h4>
+                    <p class="textWrap" style="width: 250px;" matTooltip="{{film.review}}">{{film.review}}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button (click)="openUpdatePopup()" color="accent">UPDATE</button>
+                    <button mat-raised-button color="warn" (click)="openDeletePopup(film.id)">DELETE</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<!--Search By Id Card-->
+<div class="modal" style="background:rgba(0,0,0,0.5);
+opacity: 1;" tabindex="-1" role="dialog" [ngStyle]="{'display':searchStyle}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <mat-card style="height: 28rem;" style="display: inline-grid; justify-content: center;"
+                class="mat-elevation-z4" *ngIf="searchedFilm">
+                <mat-card-header>
+                    <mat-card-title matTooltip="{{searchedFilm.title}}" class="textWrap">{{searchedFilm.title}}
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <h4>Year: </h4>{{searchedFilm.year}}
+                    <h4>Director: </h4>{{searchedFilm.director}}
+                    <h4>Stars: </h4>{{searchedFilm.stars}}
+                    <p style="width: 250px;" matTooltip="{{searchedFilm.review}}">{{searchedFilm.review}}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button (click)="closeSearchPopup()">close</button>
+                </mat-card-actions>
+            </mat-card>
+            <mat-card style="height: 28rem;" style="display: inline-grid; justify-content: center;"
+                class="mat-elevation-z4" *ngIf="!searchedFilm">
+                <mat-card-content>
+                    <h2>Oops!!! No Such Film Found</h2>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button (click)="closeSearchPopup()">close</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<!--Search Title Film Cards-->
+<div class="content" *ngIf="searchTitle">
+    <div class="row">
+        <div *ngIf="!searchedFilms">No Matching title</div>
+        <div class="column" *ngFor="let ele of searchedFilms">
+            <mat-card style="height: 28rem;" class="mat-elevation-z4">
+                <mat-card-header>
+                    <mat-card-title matTooltip="{{ele.title}}" class="textWrap">{{ele.title}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <h4>Year: </h4>{{ele.year}}
+                    <h4>Director: </h4>{{ele.director}}
+                    <h4>Stars: </h4>{{ele.stars}}
+                    <h4>Review: </h4>
+                    <p class="textWrap" style="width: 250px;" matTooltip="{{ele.review}}">{{ele.review}}</p>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-raised-button (click)="openUpdatePopup()" color="accent">UPDATE</button>
+                    <button mat-raised-button color="warn" (click)="openDeletePopup(ele.id)">DELETE</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>

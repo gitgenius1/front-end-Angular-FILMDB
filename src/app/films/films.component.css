@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+table {
+    width: 100%;
+}
+
+.column {
+    float: left;
+    width: 30%;
+    padding: 5px 10px;
+}
+
+.row {
+    margin: 0 -5px;
+}
+
+.textWrap {
+    white-space: nowrap;
+    width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
